@@ -4,18 +4,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAYXph_f0gT7Rq_BTTa3BZCal1H6erFaKo",
-//   authDomain: "taskhdfront.firebaseapp.com",
-//   databaseURL: "https://taskhdfront-default-rtdb.firebaseio.com", // ✅ Realtime DB
-//   projectId: "taskhdfront",
-//   storageBucket: "taskhdfront.appspot.com", // ✅ fixed
-//   messagingSenderId: "574505286819",
-//   appId: "1:574505286819:web:066e320c357b6ae3fa5316",
-// };
-
-// const app = initializeApp(firebaseConfig);
-
 
 
 // Your web app's Firebase configuration
