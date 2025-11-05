@@ -1,6 +1,5 @@
 // server.js
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 import sgMail from "@sendgrid/mail";
 import fetch from "node-fetch";
@@ -9,17 +8,21 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS setup (for local + Render)
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://hd-x2di.onrender.com" // your Render backend
-    ],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// ✅ FIXED CORS for Render + Netlify
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // your frontend domain
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // handle preflight requests
+  }
+
+  next();
+});
 
 // ✅ Port configuration
 const PORT = process.env.PORT || 3000;
