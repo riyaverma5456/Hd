@@ -6,13 +6,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
   const navigate = useNavigate();
+
   const handleLogout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("2fa_verified");
-    localStorage.removeItem("2fa_email");
-    navigate("/login");
+    try {
+      await signOut(auth);
+      localStorage.removeItem("2fa_verified");
+      localStorage.removeItem("2fa_email");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+
   return <button onClick={handleLogout}>Logout</button>;
 }
-
-
