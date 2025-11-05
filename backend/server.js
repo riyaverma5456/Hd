@@ -1,3 +1,4 @@
+// server.js
 import express from "express";
 import dotenv from "dotenv";
 import sgMail from "@sendgrid/mail";
@@ -7,26 +8,29 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS for frontend
+// ✅ FIXED CORS for Render + Netlify
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // frontend domain
+  res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // your frontend domain
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
-  if (req.method === "OPTIONS") return res.sendStatus(200);
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // handle preflight requests
+  }
 
   next();
 });
 
-// ✅ Port
+// ✅ Port configuration
 const PORT = process.env.PORT || 3000;
 
 // ===== SENDGRID SETUP =====
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const verificationCodes = {};
+
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -37,7 +41,7 @@ app.post("/send-2fa", async (req, res) => {
   if (!email) return res.status(400).json({ error: "Email required" });
 
   const code = generateCode();
-  const expires = Date.now() + 2 * 60 * 1000; // 2 mins
+  const expires = Date.now() + 2 * 60 * 1000; // 2 mins expiry
   verificationCodes[email] = { code, expires };
 
   const msg = {
@@ -71,6 +75,7 @@ app.post("/verify-2fa", (req, res) => {
   res.json({ success: true });
 });
 
+
 // ===== ROUTE: Fetch News (via backend) =====
 app.get("/api/news", async (req, res) => {
   const category = req.query.category || "technology";
@@ -97,7 +102,10 @@ app.get("/api/news", async (req, res) => {
   }
 });
 
+
 // ===== Start Server =====
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
+
+
