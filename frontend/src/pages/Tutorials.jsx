@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
-import UploadVideo from "../components/Tutorials/UploadVideo";
-import VideoCard from "../components/Tutorials/VideoCard";
+import UploadVideo from "../components/TutorialSection/UploadVideo";
+import VideoCard from "../components/TutorialSection/VideoCard";
 import { useNavigate } from "react-router-dom";
 
 export default function Tutorials() {

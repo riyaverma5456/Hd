@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // === AUTH COMPONENTS ===
-import Register from "./components/Auth/Register";
-import Login from "./components/Auth/Login";
-import Verify2FA from "./components/Auth/Verify2FA";
+import Register from "./components/Layout/Register";
+import Login from "./components/Layout/Login";
+import Verify2FA from "./components/Layout/Verify2FA";
 import NewsFeed from "./components/News/NewsFeed";
 
 // === PAGES ===

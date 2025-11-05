@@ -1,7 +1,7 @@
 
 // src/components/Chat/ChatNavbar.jsx
 
-import Logout from "../Auth/Logout";
+import Logout from "../Layout/Logout";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateRoomModal from "../UI/CreateRoomModal";

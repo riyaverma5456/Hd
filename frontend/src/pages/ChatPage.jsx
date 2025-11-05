@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-import ChatNavbar from "../components/Chat/ChatNavbar";
-import RoomList from "../components/Chat/RoomList";
-import ChatRoom from "../components/Chat/ChatRoom";
+import ChatNavbar from "../components/ChatSection/ChatNavbar";
+import RoomList from "../components/ChatSection/RoomList";
+import ChatRoom from "../components/ChatSection/ChatRoom";
 
 export default function ChatPage() {
   const { currentUser } = useAuth();

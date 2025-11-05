@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Logout from "../components/Auth/Logout";
+import Logout from "../components/Layout/Logout";
 
 export default function Dashboard() {
   const { currentUser } = useAuth();
