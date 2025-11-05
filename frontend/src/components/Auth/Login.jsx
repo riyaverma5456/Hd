@@ -14,7 +14,7 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      const res = await fetch("http://localhost:3000/send-2fa", {
+      const res = await fetch("https://hd-x2di.onrender.com/send-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -36,7 +36,7 @@ export default function Login() {
       await signInWithPopup(auth, googleProvider);
       const userEmail = auth.currentUser?.email;
       if (userEmail) {
-        await fetch("http://localhost:3000/send-2fa", {
+        await fetch("https://hd-x2di.onrender.com/send-2fa", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: userEmail }),

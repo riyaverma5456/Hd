@@ -36,7 +36,7 @@ export default function Verify2FA() {
       return setError("❌ Too many attempts. Please resend the code.");
 
     try {
-      const res = await fetch("http://localhost:3000/verify-2fa", {
+      const res = await fetch("hhttps://hd-x2di.onrender.com/verify-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
@@ -61,7 +61,7 @@ export default function Verify2FA() {
   // Handle resend button
   const handleResend = async () => {
     try {
-      const res = await fetch("http://localhost:3000/send-2fa", {
+      const res = await fetch("https://hd-x2di.onrender.com/send-2fa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
