@@ -1,6 +1,3 @@
-// 
-
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -11,15 +8,11 @@ import Login from "./components/Auth/Login";
 import Verify2FA from "./components/Auth/Verify2FA";
 import NewsFeed from "./components/News/NewsFeed";
 
-
-
 // === PAGES ===
 import Dashboard from "./pages/Dashboard";
 import Tutorials from "./pages/Tutorials";
 import Home from "./pages/Home";
-import ChatPage from "./pages/ChatPage"; 
-
-
+import ChatPage from "./pages/ChatPage";
 
 // === PROTECTED ROUTE ===
 function ProtectedRoute({ children }) {
@@ -31,8 +24,8 @@ function ProtectedRoute({ children }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           {/* === PUBLIC ROUTES === */}
           <Route path="/" element={<Home />} />
@@ -40,7 +33,6 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verify-2fa" element={<Verify2FA />} />
           <Route path="/news" element={<NewsFeed />} />
-
 
           {/* === PROTECTED ROUTES === */}
           <Route
@@ -61,7 +53,7 @@ export default function App() {
           />
           <Route
             path="/chat"
-            element={ // ✅ FIXED CHAT ROUTE
+            element={
               <ProtectedRoute>
                 <ChatPage />
               </ProtectedRoute>
@@ -71,7 +63,7 @@ export default function App() {
           {/* === FALLBACK === */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
