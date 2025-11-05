@@ -15,7 +15,11 @@ export default function NewsFeed() {
 
       try {
         const res = await fetch(
-          `https://newsapi.org/v2/everything?q=${encodeURIComponent(category)}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`
+          `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+            category
+          )}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${
+            import.meta.env.VITE_NEWS_API_KEY
+          }`
         );
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
