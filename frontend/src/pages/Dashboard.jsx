@@ -16,27 +16,23 @@ export default function Dashboard() {
 
       {/* === NAVBAR === */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#0033A0] via-[#0055C8] to-[#009FE3] shadow-md border-b border-blue-200 backdrop-blur-md">
-        <div className="flex justify-between items-center px-8 py-4">
-          <h1
-            onClick={() => navigate("/dashboard")}
-            className="text-2xl sm:text-3xl font-extrabold text-white cursor-pointer tracking-wide hover:scale-105 transition-transform"
-          >
-            DEV<span className="text-yellow-400">@</span>Deakin
-          </h1>
+  <div className="flex justify-between items-center px-8 py-4">
+    <h1
+      onClick={() => navigate("/dashboard")}
+      className="text-2xl sm:text-3xl font-extrabold text-white cursor-pointer tracking-wide hover:scale-105 transition-transform"
+    >
+      DEV<span className="text-yellow-400">@</span>Deakin
+    </h1>
 
-          <div className="flex items-center gap-5">
-            <span className="text-white font-medium bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-               {currentUser?.displayName || currentUser?.email}
-            </span>
-            <button
-              onClick={() => Logout()}
-              className="bg-white text-[#0033A0] font-semibold px-5 py-2 rounded-full shadow-md hover:bg-blue-50 hover:scale-105 transition-all border border-blue-100"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </nav>
+    <div className="flex items-center gap-5">
+      <span className="text-white font-medium bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+        {currentUser?.displayName || currentUser?.email}
+      </span>
+      {/* Render Logout as a component */}
+      <Logout />
+    </div>
+  </div>
+</nav>
 
       {/* === MAIN SECTION === */}
       <main className="flex flex-col items-center justify-start flex-grow px-6 pt-32 pb-20 text-center">
