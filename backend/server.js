@@ -2,13 +2,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import sgMail from "@sendgrid/mail";
-import fetch from "node-fetch";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ FIXED CORS for Render + Netlify
+// ✅ CORS for frontend
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // your frontend domain
   res.header(
@@ -18,13 +17,12 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // handle preflight requests
+    return res.sendStatus(200);
   }
 
   next();
 });
 
-// ✅ Port configuration
 const PORT = process.env.PORT || 3000;
 
 // ===== SENDGRID SETUP =====
@@ -41,7 +39,7 @@ app.post("/send-2fa", async (req, res) => {
   if (!email) return res.status(400).json({ error: "Email required" });
 
   const code = generateCode();
-  const expires = Date.now() + 2 * 60 * 1000; // 2 mins expiry
+  const expires = Date.now() + 2 * 60 * 1000; // 2 minutes
   verificationCodes[email] = { code, expires };
 
   const msg = {
@@ -66,30 +64,14 @@ app.post("/send-2fa", async (req, res) => {
 app.post("/verify-2fa", (req, res) => {
   const { email, code } = req.body;
   const record = verificationCodes[email];
+
   if (!record) return res.status(400).json({ error: "No code found" });
-  if (Date.now() > record.expires)
-    return res.status(400).json({ error: "Code expired" });
-  if (record.code !== code)
-    return res.status(400).json({ error: "Invalid code" });
+  if (Date.now() > record.expires) return res.status(400).json({ error: "Code expired" });
+  if (record.code !== code) return res.status(400).json({ error: "Invalid code" });
+
   delete verificationCodes[email];
   res.json({ success: true });
 });
-
-// ===== ROUTE: Fetch News =====
-app.get("/api/news", async (req, res) => {
-  const category = req.query.category || "technology";
-  try {
-    const response = await fetch(
-      `https://newsapi.org/v2/everything?q=${encodeURIComponent(category)}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${process.env.NEWS_API_KEY}`
-    );
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error("❌ News API Error:", err);
-    res.status(500).json({ error: "Failed to fetch news" });
-  }
-});
-
 
 // ===== Start Server =====
 app.listen(PORT, () => {

@@ -8,7 +8,6 @@ export default function NewsFeed() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // === Fetch news from YOUR backend instead of NewsAPI directly
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true);
@@ -16,7 +15,7 @@ export default function NewsFeed() {
 
       try {
         const res = await fetch(
-          `https://hd-x2di.onrender.com/api/news?category=${encodeURIComponent(category)}`
+          `https://newsapi.org/v2/everything?q=${encodeURIComponent(category)}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`
         );
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
