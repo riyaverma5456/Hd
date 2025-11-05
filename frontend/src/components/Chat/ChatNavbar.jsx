@@ -1,5 +1,7 @@
 
 // src/components/Chat/ChatNavbar.jsx
+
+import Logout from "../Auth/Logout";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateRoomModal from "../UI/CreateRoomModal";
@@ -39,6 +41,8 @@ export default function ChatNavbar({ onRoomCreated }) {
             >
               + Create Room
             </button>
+
+            <Logout />
 
             {/* User info */}
             <div className="text-sm text-white/90">
