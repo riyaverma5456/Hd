@@ -9,16 +9,20 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS setup
+// ✅ CORS setup (for local + Render)
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://hd-x2di.onrender.com" // your Render backend
+    ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-const PORT = process.env.PORT || 5050;
+// ✅ Port configuration
+const PORT = process.env.PORT || 3000;
 
 // ===== SENDGRID SETUP =====
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -34,7 +38,7 @@ app.post("/send-2fa", async (req, res) => {
   if (!email) return res.status(400).json({ error: "Email required" });
 
   const code = generateCode();
-  const expires = Date.now() + 2 * 60 * 1000;
+  const expires = Date.now() + 2 * 60 * 1000; // 2 mins expiry
   verificationCodes[email] = { code, expires };
 
   const msg = {
@@ -68,45 +72,21 @@ app.post("/verify-2fa", (req, res) => {
   res.json({ success: true });
 });
 
-// ===== ROUTE: Ask AI (Gemini 1.5 free-tier) =====
-app.post("/api/ask", async (req, res) => {
-  const { question } = req.body;
-  if (!question)
-    return res.status(400).json({ error: "Question is required" });
-
-  console.log("🧠 Asking Gemini:", question);
-
+// ===== ROUTE: Fetch News =====
+app.get("/api/news", async (req, res) => {
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: [
-            {
-              content: question,
-              type: "text",
-            },
-          ],
-        }),
-      }
+      `https://newsapi.org/v2/top-headlines?country=us&apiKey=${process.env.NEWS_API_KEY}`
     );
-
     const data = await response.json();
-    console.log("✅ Gemini raw data:", data);
-
-    const answer =
-      data?.candidates?.[0]?.content?.[0]?.text || "No response from Gemini";
-
-    res.json({ answer });
+    res.json(data);
   } catch (err) {
-    console.error("❌ Gemini API Error:", err);
-    res.status(500).json({ error: "Error connecting to Gemini API" });
+    console.error("❌ News API Error:", err);
+    res.status(500).json({ error: "Failed to fetch news" });
   }
 });
 
 // ===== Start Server =====
-app.listen(PORT, () =>
-  console.log(`✅ Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
