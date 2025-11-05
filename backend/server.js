@@ -75,23 +75,7 @@ app.post("/verify-2fa", (req, res) => {
   res.json({ success: true });
 });
 
-// ===== ROUTE: Fetch News =====
-app.get("/api/news", async (req, res) => {
-  const { category, apiKey } = req.query;
-  if (!apiKey) return res.status(400).json({ error: "Missing NewsAPI key" });
 
-  const query = encodeURIComponent(category || "technology");
-  try {
-    const response = await fetch(
-      `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${apiKey}`
-    );
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error("❌ News API Error:", err);
-    res.status(500).json({ error: "Failed to fetch news" });
-  }
-});
 
 
 // ===== Start Server =====
