@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import dotenv from "dotenv";
 import sgMail from "@sendgrid/mail";
@@ -8,29 +7,26 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ FIXED CORS for Render + Netlify
+// ✅ CORS for frontend
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // your frontend domain
+  res.header("Access-Control-Allow-Origin", "https://hdpro.netlify.app"); // frontend domain
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // handle preflight requests
-  }
+  if (req.method === "OPTIONS") return res.sendStatus(200);
 
   next();
 });
 
-// ✅ Port configuration
+// ✅ Port
 const PORT = process.env.PORT || 3000;
 
 // ===== SENDGRID SETUP =====
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const verificationCodes = {};
-
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -41,7 +37,7 @@ app.post("/send-2fa", async (req, res) => {
   if (!email) return res.status(400).json({ error: "Email required" });
 
   const code = generateCode();
-  const expires = Date.now() + 2 * 60 * 1000; // 2 mins expiry
+  const expires = Date.now() + 2 * 60 * 1000; // 2 mins
   verificationCodes[email] = { code, expires };
 
   const msg = {
@@ -75,8 +71,31 @@ app.post("/verify-2fa", (req, res) => {
   res.json({ success: true });
 });
 
+// ===== ROUTE: Fetch News (via backend) =====
+app.get("/api/news", async (req, res) => {
+  const category = req.query.category || "technology";
 
+  try {
+    const response = await fetch(
+      `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+        category
+      )}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${process.env.NEWS_API_KEY}`
+    );
 
+    if (!response.ok) {
+      console.error("News API response status:", response.status);
+      return res
+        .status(response.status)
+        .json({ error: "Failed to fetch news from NewsAPI" });
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error("❌ News API Error:", err);
+    res.status(500).json({ error: "Failed to fetch news" });
+  }
+});
 
 // ===== Start Server =====
 app.listen(PORT, () => {
