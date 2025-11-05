@@ -4,10 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "server": "nodemon server.js",
-    "client": "vite",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
-  },
+  "server": "nodemon server.js",
+  "client": "vite",
+  "dev": "concurrently \"npm run server\" \"npm run client\"",
+  "build": "vite build",
+  "preview": "vite preview"
+},
+
   "dependencies": {
     "@copilotkit/react-ui": "^1.10.6",
     "@google/generative-ai": "^0.24.1",
