@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,31 +5,38 @@ export default function NewsFeed() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState("technology");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-
+  // === Fetch news from YOUR backend instead of NewsAPI directly
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true);
+      setError("");
+
       try {
         const res = await fetch(
-          `https://newsapi.org/v2/everything?q=${category}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${API_KEY}`
+          `https://hd-x2di.onrender.com/api/news?category=${encodeURIComponent(category)}`
         );
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
         const data = await res.json();
         setArticles(data.articles || []);
-      } catch (error) {
-        console.error("Error fetching news:", error);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+        setError("Failed to load news. Try again later.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchNews();
   }, [category]);
 
   return (
     <div className="min-h-screen flex flex-col text-[#1e293b] bg-gradient-to-b from-[#F8FBFF] to-[#EAF3FF]">
-      {/* === NAVBAR === */}
+      {/* NAVBAR */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#0033A0] via-[#0055C8] to-[#009FE3] shadow-md border-b border-blue-200 backdrop-blur-md">
         <div className="flex justify-between items-center px-8 py-4">
           <h1
@@ -48,7 +54,7 @@ export default function NewsFeed() {
         </div>
       </nav>
 
-      {/* === MAIN CONTENT === */}
+      {/* MAIN CONTENT */}
       <main className="flex-grow pt-28 pb-10 px-6 text-center">
         <h1 className="text-3xl font-bold text-[#0033A0] mb-6 flex items-center justify-center gap-2">
           📰 Tech News Feed
@@ -71,6 +77,8 @@ export default function NewsFeed() {
 
         {loading ? (
           <p className="text-center text-gray-500">Loading news...</p>
+        ) : error ? (
+          <p className="text-center text-red-600">{error}</p>
         ) : articles.length === 0 ? (
           <p className="text-center text-gray-500">No articles found.</p>
         ) : (
@@ -109,7 +117,7 @@ export default function NewsFeed() {
         )}
       </main>
 
-      {/* === FOOTER === */}
+      {/* FOOTER */}
       <footer className="text-center text-gray-500 text-sm py-4 border-t bg-white/60">
         © {new Date().getFullYear()} DEV@Deakin — Empowering Student Developers
       </footer>

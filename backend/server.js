@@ -77,9 +77,10 @@ app.post("/verify-2fa", (req, res) => {
 
 // ===== ROUTE: Fetch News =====
 app.get("/api/news", async (req, res) => {
+  const category = req.query.category || "technology";
   try {
     const response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&apiKey=${process.env.NEWS_API_KEY}`
+      `https://newsapi.org/v2/everything?q=${encodeURIComponent(category)}&language=en&sortBy=publishedAt&pageSize=12&apiKey=${process.env.NEWS_API_KEY}`
     );
     const data = await response.json();
     res.json(data);
@@ -88,6 +89,7 @@ app.get("/api/news", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch news" });
   }
 });
+
 
 // ===== Start Server =====
 app.listen(PORT, () => {
